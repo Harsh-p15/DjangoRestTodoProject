@@ -1,6 +1,6 @@
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from . import views 
 
 urlpatterns = [
@@ -13,5 +13,6 @@ urlpatterns = [
     path('delete_todo/<int:srno>', views.delete_todo, name = 'delete_todo'),  
     path('signout/', views.signout_view, name = "signout"),
 
+    path('api/', include('api.urls')),
 
 ]

@@ -1,0 +1,152 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if obj %}Edit Todo{% else %}Todo Page{% endif %}</title>
+
+    <!-- Your CSS files -->
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <style>
+        /* Container adjustments */
+        .signup-box {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: #f4f4f4;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .heads {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .heading {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: brown;
+        }
+
+        .icon {
+            cursor: pointer;
+            font-weight: bold;
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        .icon:hover {
+            color: #0056b3;
+        }
+
+        .todo-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .submit-button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            background-color: #007BFF;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Todo list */
+        .Todo {
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #333; /* Text color for visibility */
+        }
+
+        .todo-green {
+            background-color: #d4edda;
+        }
+
+        .todo-red {
+            background-color: #f8d7da;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: #555;
+        }
+
+        .todo-icons a {
+            margin-left: 10px;
+            color: #007BFF;
+        }
+
+        .todo-icons a:hover {
+            color: #0056b3;
+        }
+
+        /* Scroll for long todo list */
+        .signup-box.scr {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="signup-login">
+        <div class="signup-box scr">
+            <div class="heads">
+                <div class="heading">Edit content ?</div>
+                
+            </div>
+
+            <!-- Add/Edit Form -->
+            <form method="post">
+                {% csrf_token %}
+                <input type="text" name="title" required class="todo-input inp"
+                    placeholder="What is the task today?" value="{% if obj %}{{ obj.title }}{% endif %}">
+                {% if obj %}
+                <input type="hidden" name="srno" value="{{ obj.srno }}">
+                <input class="submit-button" type="submit" value="Update Task">
+                {% else %}
+                <input class="submit-button" type="submit" value="Add Task">
+                {% endif %}
+            </form>
+
+            <!-- Todo List -->
+            {% for todo in res %}
+            <div class="Todo {% if todo.status %}todo-green{% else %}todo-red{% endif %}">
+                <p class="{% if todo.status %}completed{% endif %}">{{ todo.title }}</p>
+                <div class="todo-icons">
+                    <a href="/edit_todo/{{ todo.srno }}" class="icon">&#9998; Edit</a>
+                    <a href="/delete_todo/{{ todo.srno }}" class="icon">&#128465; Delete</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="{% static 'js/todo.js' %}"></script>
+</body>
+
+</html>

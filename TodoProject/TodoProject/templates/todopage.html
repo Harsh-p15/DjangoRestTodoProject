@@ -1,0 +1,175 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TodoPage</title>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <style>
+        /* ===== Body and Layout ===== */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e1e2f;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .signup-login {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 50px 20px;
+        }
+
+        .content-wrapper {
+            width: 500px; /* Set the desired width for the container */
+        }
+
+        .signup-box {
+            background-color: #2b2b3d;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+            width: 100%;
+            max-width: 500px !important;
+        }
+
+        .heads {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 0 20px;
+        }
+
+        .heading {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: brown;
+        }
+
+        .icon {
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 10px;
+            color: #ff8a65;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .icon:hover {
+            color: #ffb74d;
+        }
+
+        /* ===== Todo Form ===== */
+        .todo-input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: #ff8a65;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-button:hover {
+            background-color: #ff7043;
+        }
+
+        /* ===== Todo Items ===== */
+        .Todo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: transform 0.2s ease;
+        }
+
+        .Todo:hover {
+            transform: scale(1.02);
+        }
+
+        .todo-green {
+            background-color: #4caf70;
+            color: #fff;
+        }
+
+        .todo-red {
+            background-color: #ef5350;
+            color: #fff;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        .clickable-div a.icon {
+            margin-left: 15px;
+            color: #fff;
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 600px) {
+            .signup-box {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="signup-login">
+        <div>
+            <div class="content-wrapper">  <h1 style="text-align:center; margin-bottom: 20px; color: #ffcc80;">Hello {{ user }}</h1>
+            <div class="signup-box scr">
+                <div class="heads">
+                    <div class="heading">Get Things Done?</div>
+                    <div class="anca">
+                        <a href="{% url 'signout' %}" class="icon">&#x23FB; Logout</a>
+                    </div>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="text" name="title" required class="todo-input inp"
+                        placeholder="What is the task today?">
+                    <input class="submit-button" type="submit" value="Add Task">
+                </form>
+
+                {% for todo in res %}
+                <div class="Todo clickable-div {% if todo.status %}todo-green{% else %}todo-red{% endif %}">
+                    <p class="{% if todo.status %}completed{% endif %}">{{ todo.title }}</p>
+                    <div>
+                        <a href="/edit_todo/{{ todo.srno }}" class="icon">&#9998; Edit</a>
+                        <a href="/delete_todo/{{ todo.srno }}" class="icon">&#128465; Delete</a>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/todo.js' %}"></script>
+</body>
+
+</html>

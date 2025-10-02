@@ -1,0 +1,20 @@
+
+from django.contrib import admin
+from django.urls import path, include
+from . import views 
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    #path('', views.signup),
+    #path('signup/', views.signup),
+    #path('login/', views.login_view),
+    #path('todopage/', views.todopage, name='todopage'),
+    #path('edit_todo/<int:srno>', views.edit_todo, name = 'edit_todo'),  
+    #path('delete_todo/<int:srno>', views.delete_todo, name = 'delete_todo'),  
+    #path('signout/', views.signout_view, name = "signout"),
+
+    path('', views.login_view, name='home'), 
+    path('api/', include('api.urls')),
+    path('api-auth/', include('rest_framework.urls')),
+
+]

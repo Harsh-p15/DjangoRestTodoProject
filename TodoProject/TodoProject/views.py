@@ -1,69 +1,33 @@
-from django.shortcuts import render, redirect , get_object_or_404
-from django.contrib.auth.models import User
-from  TodoProject import models
-from .models import Todo
-from . import models
-from django.contrib.auth import authenticate,login,logout
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.http import HttpResponse
 
-def signup(request):
-    if request.method =='POST':
-        username = request.POST.get('username')
-        emailid = request.POST.get('emailid')
-        pwd = request.POST.get('pwd')
-        print(username,emailid,pwd)
-        my_user = User.objects.create_user(username,emailid,pwd)
-        my_user.save()
-        return redirect('/login')
-
-    return render(request, 'signup.html')
-
+# This view handles the login form submission
+# In TodoProject/views.py
 def login_view(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        pwd = request.POST.get('pwd')
-        print(username,pwd)
-        user = authenticate(request,username = username, password = pwd)
-        if user is not None:
-            login(request,user)
-            return redirect('/todopage')
-        else:
-            return redirect('/login')
-
+    # This view now only shows the login form.
+    # JavaScript will handle the actual login process.
     return render(request, 'login.html')
 
+# This view just shows the signup page
+def signup(request):
+    # The actual user creation is handled by your backend API's /api/register/ endpoint
+    return render(request, 'signup.html')
+
+# This view just shows the main to-do page skeleton
 def todopage(request):
-    if request.method == 'POST':
-        title = request.POST.get('title')
-        print(title)
-        obj = models.Todo(title = title, user = request.user)
-        obj.save()
-        res = models.Todo.objects.filter(user=request.user).order_by('-date')
-        return redirect('/todopage',{'res':res})
-    res = models.Todo.objects.filter(user=request.user).order_by('-date')
-    return render(request, 'todopage.html', {'res':res})
- 
-def edit_todo(request, srno):
-    # Get the todo object or 404
-    obj = get_object_or_404(Todo, srno=srno)
+    if not request.user.is_authenticated:
+        return redirect('login')
+    return render(request, 'todopage.html')
 
-    if request.method == 'POST':
-        title = request.POST.get('title')
-        if title:
-            obj.title = title
-            obj.save()
-        return redirect('/todopage')  # Redirect after update
-
-    # If GET request, render the edit page
-    res = Todo.objects.all().order_by('-srno')  # Pass full todo list if needed
-    return render(request, 'edit_todo.html', {'obj': obj, 'res': res})
-     
-def delete_todo(request,srno):
-    print(srno)
-    obj=models.Todo.objects.get(srno=srno)
-    obj.delete()
-    return redirect('/todopage')
-
+# This view logs the user out
 def signout_view(request):
     logout(request)
-    return redirect('/login/')
-# Create your views here.
+    return redirect('login')
+
+# These views are just placeholders, as their logic is handled by JavaScript
+def edit_todo(request, srno):
+    return HttpResponse(f"This is a placeholder for editing todo #{srno}")
+
+def delete_todo(request, srno):
+    return redirect('todopage') # Redirect back, JS handles the actual delete

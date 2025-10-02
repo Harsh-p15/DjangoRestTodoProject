@@ -3,11 +3,10 @@
 <html lang="en">
 
 <head>
+    <script src="https://kit.fontawesome.com/e2332d330e.js" crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TodoPage</title>
-    <link rel="stylesheet" href="{% static 'css/index.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <style>
         /* ===== Body and Layout ===== */
         body {
@@ -26,7 +25,7 @@
         }
 
         .content-wrapper {
-            width: 500px; /* Set the desired width for the container */
+            width: 500px;
         }
 
         .signup-box {
@@ -43,7 +42,6 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
-            padding: 0 20px;
         }
 
         .heading {
@@ -74,7 +72,7 @@
             outline: none;
             margin-bottom: 10px;
             font-size: 1rem;
-            
+            box-sizing: border-box;
         }
 
         .submit-button {
@@ -93,30 +91,26 @@
             background-color: #ff7043;
         }
 
-        /* ===== Todo Items ===== */
+        /* ===== Todo Items (dynamically created by JS) ===== */
         .Todo {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 15px;
             border-radius: 10px;
-            margin-bottom: 10px;
+            margin-top: 15px; /* Added margin-top */
             transition: transform 0.2s ease;
+            background-color: #4caf70; /* Default style */
+            color: #fff;
         }
 
         .Todo:hover {
             transform: scale(1.02);
         }
-
-        .todo-green {
-            background-color: #4caf70;
-            color: #fff;
-        }
-
-        .todo-red {
-            background-color: #ef5350;
-            color: #fff;
-        }
+        
+        /* You can add specific color styles if your API provides status */
+        /* .todo-green { ... } */
+        /* .todo-red { ... } */
 
         .completed {
             text-decoration: line-through;
@@ -128,44 +122,32 @@
             color: #fff;
         }
 
-        /* ===== Responsive ===== */
-        @media (max-width: 600px) {
-            .signup-box {
-                padding: 20px;
-            }
-        }
     </style>
 </head>
 
 <body>
     <div class="signup-login">
         <div>
-            <div class="content-wrapper">  <h1 style="text-align:center; margin-bottom: 20px; color: #ffcc80;">Hello {{ user }}</h1>
-            <div class="signup-box scr">
-                <div class="heads">
-                    <div class="heading">Get Things Done?</div>
-                    <div class="anca">
-                        <a href="{% url 'signout' %}" class="icon">&#x23FB; Logout</a>
+            <div class="content-wrapper">
+                <h1 style="text-align:center; margin-bottom: 20px; color: #ffcc80;">Hello <span id="username-display">User</span></h1>
+                <div class="signup-box scr">
+                    <div class="heads">
+                        <div class="heading">Get Things Done?</div>
+                        <div class="anca">
+                            <a href="{% url 'signout' %}" class="icon">&#x23FB; Logout</a>
+                        </div>
                     </div>
+
+                    <form id="todo-form">
+                        {% csrf_token %}
+                        <input id="title-input" type="text" name="title" required class="todo-input inp"
+                            placeholder="What is the task today?">
+                        <input class="submit-button" type="submit" value="Add Task">
+                    </form>
+
+                    <div id="todo-list-container"></div>
+
                 </div>
-
-                <form method="post">
-                    {% csrf_token %}
-                    <input type="text" name="title" required class="todo-input inp"
-                        placeholder="What is the task today?">
-                    <input class="submit-button" type="submit" value="Add Task">
-                </form>
-
-                {% for todo in res %}
-                <div class="Todo clickable-div {% if todo.status %}todo-green{% else %}todo-red{% endif %}">
-                    <p class="{% if todo.status %}completed{% endif %}">{{ todo.title }}</p>
-                    <div>
-                        <a href="/edit_todo/{{ todo.srno }}" class="icon">&#9998; Edit</a>
-                        <a href="/delete_todo/{{ todo.srno }}" class="icon">&#128465; Delete</a>
-                    </div>
-                </div>
-                {% endfor %}
-
             </div>
         </div>
     </div>

@@ -1,13 +1,14 @@
 from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.models import User
+from api.models import Todo
+from .serializers import TodoSerializer, UserSerializer
+from rest_framework import viewsets, permissions, generics
 
-from TodoProject.models import Todo
-from .serializers import TodoSerializer
+class TodoViewSet(viewsets.ModelViewSet): #inheriting from viewsets.ModelViewSet get put post delete methods
 
-class TodoViewSet(viewsets.ModelViewSet):
-
-    serializer_class = TodoSerializer
+    serializer_class = TodoSerializer #TodoSerializer as translator
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -24,4 +25,7 @@ class TodoViewSet(viewsets.ModelViewSet):
         """
         serializer.save(user=self.request.user)
 
-# Create your views here.
+class UserCreate(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.AllowAny]

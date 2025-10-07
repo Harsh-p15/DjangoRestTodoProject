@@ -1,6 +1,6 @@
 from rest_framework.routers import DefaultRouter
 from . import views
-from .views import TodoViewSet, UserCreate
+from .views import TodoViewSet, UserCreate, login_api
 from django.urls import path, include
 
 
@@ -12,6 +12,8 @@ router.register(r'todos', views.TodoViewSet, basename='todo')
 urlpatterns = [
     path('', include(router.urls)),
     path('register/', UserCreate.as_view(), name='register'),
+    path('login/', login_api, name='login_api'),
+    
 ]
 
 

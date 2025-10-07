@@ -16,5 +16,6 @@ urlpatterns = [
     path('', views.login_view, name='home'), 
     path('api/', include('api.urls')),
     path('api-auth/', include('rest_framework.urls')),
+    
 
 ]

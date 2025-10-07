@@ -16,8 +16,6 @@ def signup(request):
 
 # This view just shows the main to-do page skeleton
 def todopage(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
     return render(request, 'todopage.html')
 
 # This view logs the user out
